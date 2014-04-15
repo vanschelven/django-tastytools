@@ -1,6 +1,10 @@
 from tastypie.resources import Resource as TastyResource
 from tastypie.resources import ModelResource as TastyModelResource
-from django.conf.urls.defaults import url
+try:
+    from django.conf.urls import url
+except ImportError:
+    # Django <= 1.4
+    from django.conf.urls.defaults import url
 from django.core.exceptions import ObjectDoesNotExist, MultipleObjectsReturned
 from tastytools import fields
 from test.resources import TestData
