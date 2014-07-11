@@ -1,9 +1,9 @@
+import json
 from django.test import Client as DjangoClient
 from django.core.serializers import json
 from django.test.client import MULTIPART_CONTENT, BOUNDARY
 from django.test.client import encode_multipart, FakePayload
 from django.utils.http import urlencode
-from django.utils import simplejson
 from urlparse import urlparse
 from tastypie.resources import Resource
 from datetime import datetime
@@ -83,14 +83,14 @@ class Client(DjangoClient):
         path = self._path_or_resource(path, data)
 
         if type(data) == dict and content_type == "application/json":
-            data = simplejson.dumps(data, cls=json.DjangoJSONEncoder)
+            data = json.dumps(data, cls=json.DjangoJSONEncoder)
 
         response = self.patch_request(path, data=data,
             content_type=content_type, **extra)
 
         if parse == "json":
             try:
-                response.data = simplejson.loads(response.content)
+                response.data = json.loads(response.content)
             except:
                 response.data = None
 
@@ -112,14 +112,14 @@ class Client(DjangoClient):
         data = data or {}
 
         if type(data) == dict and content_type == "application/json":
-            data = simplejson.dumps(data, cls=json.DjangoJSONEncoder)
+            data = json.dumps(data, cls=json.DjangoJSONEncoder)
 
         response = super(Client, self).post(path, data, content_type,
             follow=False, **extra)
 
         if parse == "json":
             try:
-                response.data = simplejson.loads(response.content)
+                response.data = json.loads(response.content)
             except:
                 response.data = None
         return response
@@ -136,13 +136,13 @@ class Client(DjangoClient):
         data = data or {}
 
         if type(data) == dict:
-            data = simplejson.dumps(data, cls=json.DjangoJSONEncoder)
+            data = json.dumps(data, cls=json.DjangoJSONEncoder)
 
         response = super(Client, self).put(path, data, content_type, **extra)
 
         if parse == "json":
             try:
-                response.data = simplejson.loads(response.content)
+                response.data = json.loads(response.content)
             except:
                 response.data = None
         return response
@@ -162,7 +162,7 @@ class Client(DjangoClient):
         """
         Overloads default Django client GET request to receive a parse
         parameter. When parse='json', the server's response is parsed using
-        simplejson and loaded into request.data.
+        json and loaded into request.data.
         """
 
         path = self._path_or_resource(path, obj)
@@ -171,7 +171,7 @@ class Client(DjangoClient):
 
         if parse == "json":
             try:
-                response.data = simplejson.loads(response.content)
+                response.data = json.loads(response.content)
             except Exception:
                 response.data = None
         return response
